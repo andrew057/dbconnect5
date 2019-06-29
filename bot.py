@@ -1,64 +1,135 @@
-#import sys
-#sys.path.insert(0, '../')
-
+import vk_api
+import os
+import mysql.connector
+import datetime
+import calendar
+import pytz
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-import vk_api
-import datetime
-import random
-import time
-
-#login, password='89165775463','helloend111'
-vk_session = vk_api.VkApi( token="54ef672458b301255e5da023c15ae9ace2e462b2b05817815527a45c7b8a0dfd6e1e90c04e604a32f60e4")
-
-
-a=1
+token = os.environ.get('BOT_TOKEN')
+vk_session = vk_api.VkApi(token=token)
 
 session_api = vk_session.get_api()
 
 longpoll = VkLongPoll(vk_session)
 
-def minutes():
-    x=str(datetime.datetime.now())
-    y=x[11:]
-    minutes=y[3:5]
-    seconds=y[6:]
-    return int(minutes)
-def seconds():
-    x=str(datetime.datetime.now())
-    y=x[11:]
-    minutes=y[3:5]
-    seconds=y[6:]
-    return int(seconds[0:2])
 
 
+def sqlQuery( query, number ):
+   passwords = os.environ.get('PASSWORD')
+   conn = mysql.connector.connect( host = '141.8.195.21', user = 'a0314821_TestOnlikCounting', password = str(passwords), database = 'a0314821_TestOnlikCounting' )
+   cursor = conn.cursor()
+   cursor.execute(query)
+   if number == 1:
+       result = cursor.fetchall()
+       return result
+   if number == 2:
+       conn.commit()
+       cursor.close()
+       conn.close()
+def timez():
+    x = str( datetime.datetime.now(pytz.timezone("Europe/Moscow")) )
+    return int( x[11:13]), int( x[14:16]), int( x[17:19])
+def mounth():
+    x = str( datetime.datetime.now(pytz.timezone("Europe/Moscow")) )
+    return int( x[5:7] )
+def chislo():
+    x = str( datetime.datetime.now(pytz.timezone("Europe/Moscow")) )
+    return int( x[8:10] )
+def hoursMinutes():
+    now = str( datetime.datetime.now(pytz.timezone("Europe/Moscow")) )
+    res = now[11:16]
+    return int( res[0:2] ) * 60 + int( res[3:5] )
+def tostring( string ):
+    resa = ''
+    for i in range(0, len(string) - 1 ):
+        if string[i] == ' ' and string[i+1] == ' ':
+            break
+        else:
+            resa = resa + string[i]
+    if string[len(string) - 1] != ' ':
+        resa = resa + string[len(string) - 1]
+    return resa
+result = sqlQuery( "Select id from everyData where Works = '1'", 1 )
+i = 0
 while True:
-    for event in longpoll.listen():
-        if(minutes()%5==0):
-            #vk_session.method('wall.post', {'owner_id': '-137821135','message': "#6server\n Продам Cadillac CTV. Гос: 5.57кк, цена договорная, в лс.","attachments": 'photo100172_166443618'})
-            #post=364397
-            #vk_session.method('wall.delete', {'owner_id': '-163915966','post_id': str(post)})
-            mastmp=vk_session.method('wall.get', {'owner_id': '-163915966','count': 20})
-            x=len(mastmp["items"])
-            for i in range (0,x):
-                if(str(mastmp["items"][i]['from_id'])=='414517334'):
-                    print(mastmp["items"][i]['id'])
-                    vk_session.method('wall.delete', {'owner_id': '-163915966','post_id': str(mastmp["items"][i]['id'])})
-            mastmp2=vk_session.method('wall.get', {'owner_id': '-137821135','count': 20})
-            y=len(mastmp2["items"])
-            for i in range (0,y):
-                if(str(mastmp2["items"][i]['from_id'])=='414517334'):
-                    print(mastmp2["items"][i]['id'])
-                    vk_session.method('wall.delete', {'owner_id': '-137821135','post_id': str(mastmp2["items"][i]['id'])})
-            vk_session.method('wall.post', {'owner_id': '-163915966','message': "#2server⛔⛔⛔⛔⛔⛔⛔⛔⛔\nПродам дом в Горной! Гос: 900к!\nДоплата договорная, в лс.",'attachment':'photo-177844818_456239077'})
-            #vk_session.method('wall.post', {'owner_id': '-137821135','message': "#1server\n Продам Subaru WRX на 108 тонере и ВАЗ 2107 на 108 тонере и старых темно-синих фарах. \nЦена договорная, в лс.\n#2server. Продам коттедж в Жуковском, второй от ЖТУ. Гос: 1.1кк, дп договорная, в лс.\n #6server.\nПродам BMW 750 I. Гос: 1.449кк, без номеров, новая! Цена в лс!"})
-            time.sleep(60)
-            #print("good!")
-            #vk_session.method('wall.post', {'owner_id': '-163915966','message': "#1server\n Продам Subaru WRX на 108 тонере, которого сейчас уже нет, и старых темно-синих фарах. \nЦена договорная, в лс."})
-            #vk_session.method('wall.post', {'owner_id': '-137821135','message': "#1server\n Продам Subaru WRX на 108 тонере, которого сейчас уже нет, и старых темно-синих фарах. \nЦена договорная, в лс."})
-            
-    if(minutes()%20==0):
-        print("ne good!")
-        #vk_session.method('wall.post', {'owner_id': '-163915966','message': "#6server\n Продам Mercedes E63 (ешку). Гос: 5.94кк, цена договорная, в лс.","attachments":'photo100172_166443618'})
-        #vk_session.method('wall.post', {'owner_id': '-137821135','message': "#6server\n Продам Cadillac CTV. Гос: 5.57кк, цена договорная, в лс.","attachments": 'photo100172_166443618'})
-        #time.sleep(60)
+    x, y, z = timez()
+    if x  ==  0 and y == 0 and z == 0:
+        time.sleep(1)
+        if chislo() == 1:
+            number = '31'
+            tmpmounth = mounth() - 1
+        else:
+            number = chislo() - 1
+            tmpmounth = mounth()
+        if tmpmounth < 10:
+            tmpmounth = '0' + str( tmpmounth )
+        else:
+            tmpmounth = str( tmpmounth )
+        if number < 10:
+           number = '0' + str( number )
+        else:
+           number = str( number )
+        res = number + '.' + tmpmounth
+        print( 'Res = ' )
+        print( res )
+        players = sqlQuery( "Select id from everyData where Works = '1'", 1 )
+        i = 0
+        while True:
+            try:
+               onlik = 1440 - int( sqlQuery( "Select lastGoing from everyData where id = '"+str(players[i][0])+"'", 1 )[0][0] )
+               if tostring( str( sqlQuery( 'Select `'+str(res)+'`'+" from everyData where id = '"+str(players[i][0])+"'", 1)[0][0] ) ) == 'None':
+                  sqlQuery( 'Update everyData set `' +str(res)+'` =' +"'0'" +"where id = '"+str(players[i][0]) + "'", 2 )
+               summ = onlik + int( sqlQuery( 'Select `'+str(res)+'`'+" from everyData where id = '"+str(players[i][0])+"'", 1)[0][0] )
+               sqlQuery( "Update everyData set lastGoing = '0' where id = '" + str( players[i][0]) + "'", 2 )
+               sqlQuery( 'Update everyData set `' +str(res)+'` = ' + "'"+str(summ)+"'" +"where id = '"+str(players[i][0]) + "'", 2 )
+               i = i + 1
+               print( onlik )
+            except Exception:
+                break
+        if chislo() == 5:
+            mounths = int( mounth() ) - 1
+            mes = ''
+            if mounths < 10:
+                mes = '0' 
+            mes = mes + str( mounths )
+            print( mes )
+            print( calendar.monthrange( 2019,mounths )[1] + 1  )
+            for i in range( 1, calendar.monthrange( 2019,mounths )[1] + 1 ):
+                try:
+                    if i < 10:
+                        day = '0' + str( i )
+                    else:
+                        day = str( i )
+                    tmpkha = str( day ) + '.' + str( mes )
+                    sqlQuery( 'alter table everyData drop column `'+str(tmpkha) +'`', 2 )
+                    print( i )
+                except Exception:
+                    break
+            mounths = mounth()
+            mes = ''
+            if mounths < 10:
+                mes = '0' 
+            mes = mes + str( mounths )
+            for i in range( 6, calendar.monthrange( 2019,mounths )[1] + 1 ):
+                try:
+                    if i < 10:
+                        day = '0' + str( i )
+                    else:
+                        day = str( i )
+                    tmpkha = str( day ) + '.' + str( mes )
+                    sqlQuery( 'alter table everyData add `'+str(tmpkha) +'` varchar(10)', 2 )
+                except Exception:
+                    break
+            mounths = mounth() + 1
+            mes = ''
+            if mounths < 10:
+                mes = '0'
+            mes = mes + str( mounths )
+            for i in range( 1, 6 ):
+                try:
+                    day = '0' + str( i )
+                    tmpkha = str( day ) + '.' + str( mes )
+                    sqlQuery( 'alter table everyData add `'+str(tmpkha) +'` varchar(10)', 2 )
+                except Exception:
+                    break
