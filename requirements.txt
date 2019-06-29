@@ -1,0 +1,7 @@
+vk_api
+pypyodbc
+mysql_connector
+websockets
+chardet
+aiohttp
+pytz
