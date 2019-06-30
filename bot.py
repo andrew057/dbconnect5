@@ -1,17 +1,9 @@
-import vk_api
 import os
 import mysql.connector
 import datetime
 import calendar
 import pytz
-from vk_api.longpoll import VkLongPoll, VkEventType
-from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-token = os.environ.get('BOT_TOKEN')
-vk_session = vk_api.VkApi(token=token)
-
-session_api = vk_session.get_api()
-
-longpoll = VkLongPoll(vk_session)
+import time
 
 
 
@@ -57,8 +49,8 @@ while True:
     if x  ==  0 and y == 0 and z == 0:
         time.sleep(1)
         if chislo() == 1:
-            number = '31'
             tmpmounth = mounth() - 1
+            number = calendar.monthrange(2019,tmpmounth)[1]
         else:
             number = chislo() - 1
             tmpmounth = mounth()
@@ -71,8 +63,6 @@ while True:
         else:
            number = str( number )
         res = number + '.' + tmpmounth
-        print( 'Res = ' )
-        print( res )
         players = sqlQuery( "Select id from everyData where Works = '1'", 1 )
         i = 0
         while True:
@@ -84,7 +74,6 @@ while True:
                sqlQuery( "Update everyData set lastGoing = '0' where id = '" + str( players[i][0]) + "'", 2 )
                sqlQuery( 'Update everyData set `' +str(res)+'` = ' + "'"+str(summ)+"'" +"where id = '"+str(players[i][0]) + "'", 2 )
                i = i + 1
-               print( onlik )
             except Exception:
                 break
         if chislo() == 5:
@@ -93,8 +82,6 @@ while True:
             if mounths < 10:
                 mes = '0' 
             mes = mes + str( mounths )
-            print( mes )
-            print( calendar.monthrange( 2019,mounths )[1] + 1  )
             for i in range( 1, calendar.monthrange( 2019,mounths )[1] + 1 ):
                 try:
                     if i < 10:
@@ -103,7 +90,6 @@ while True:
                         day = str( i )
                     tmpkha = str( day ) + '.' + str( mes )
                     sqlQuery( 'alter table everyData drop column `'+str(tmpkha) +'`', 2 )
-                    print( i )
                 except Exception:
                     break
             mounths = mounth()
