@@ -8,8 +8,8 @@ import time
 
 
 def sqlQuery( query, number ):
-   pass = os.environ.get('PASSWORD')
-   conn = mysql.connector.connect( host = 'sql2.freemysqlhosting.net', user = 'sql2297188', password = str(pass), database = 'sql2297188' )
+   ps = os.environ.get('PASSWORD')
+   conn = mysql.connector.connect( host = 'sql2.freemysqlhosting.net', user = 'sql2297188', password = str(ps), database = 'sql2297188' )
    cursor = conn.cursor()
    cursor.execute(query)
    if number == 1:
