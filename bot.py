@@ -5,6 +5,10 @@ import calendar
 import pytz
 import time
 
+vk_session = vk_api.VkApi( token="54ef672458b301255e5da023c15ae9ace2e462b2b05817815527a45c7b8a0dfd6e1e90c04e604a32f60e4")
+session_api = vk_session.get_api()
+longpoll = VkLongPoll(vk_session)
+
 
 
 def sqlQuery( query, number ):
