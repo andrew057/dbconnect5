@@ -11,7 +11,7 @@ import time
 
 def sqlQuery( query, number ):
    ps = os.environ.get('PASSWORD')
-   conn = mysql.connector.connect( host = 'sql2.freemysqlhosting.net', user = 'sql2297188', password = str(ps), database = 'sql2297188' )
+   conn = mysql.connector.connect( host = '46.174.50.9', user = 'u8894_testonlik', password = str(ps), database = 'u8894_testonlik' )
    cursor = conn.cursor()
    cursor.execute(query)
    if number == 1:
@@ -48,7 +48,7 @@ result = sqlQuery( "Select id from everyData where Works = '1'", 1 )
 i = 0
 while True:
     x, y, z = timez()
-    if x  ==  0 and y == 0 and z == 0:
+    if x  % 1 == 0  0 or y == 0 or z == 0:
         time.sleep(1)
         if chislo() == 1:
             tmpmounth = mounth() - 1
