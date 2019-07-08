@@ -48,7 +48,7 @@ result = sqlQuery( "Select id from everyData where Works = '1'", 1 )
 i = 0
 while True:
     x, y, z = timez()
-    if x  % 1 == 0  0 or y == 0 or z == 0:
+    if x  % 1 == 0 or y == 0 or z == 0:
         time.sleep(1)
         if chislo() == 1:
             tmpmounth = mounth() - 1
